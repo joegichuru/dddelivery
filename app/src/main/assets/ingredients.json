@@ -1,0 +1,63 @@
+{
+  "status": {
+    "success": true,
+    "statusCode": 200,
+    "message": "success"
+  },
+  "data": [
+    {
+      "id": 1,
+      "title": "Japanese Fried Rice",
+      "categoryId": 1,
+      "imageUrl": "",
+      "quantity": 10,
+      "available": false,
+      "count": 15
+    },
+    {
+      "id": 2,
+      "title": "Japanese Fried Rice",
+      "categoryId": 2,
+      "imageUrl": "",
+      "quantity": 10,
+      "available": false,
+      "count": 25
+    },
+    {
+      "id": 2,
+      "title": "Japanese Fried Rice",
+      "categoryId": 3,
+      "imageUrl": "",
+      "quantity": 10,
+      "available": true,
+      "count": 2
+    },
+    {
+      "id": 2,
+      "title": "Japanese Fried Rice",
+      "categoryId": 4,
+      "imageUrl": "",
+      "quantity": 10,
+      "available": true,
+      "count": 2
+    },
+    {
+      "id": 2,
+      "title": "Japanese Fried Rice",
+      "categoryId": 4,
+      "imageUrl": "",
+      "quantity": 10,
+      "available": true,
+      "count": 8
+    },
+    {
+      "id": 2,
+      "title": "Japanese Fried Rice",
+      "categoryId": 4,
+      "imageUrl": "",
+      "quantity": 10,
+      "available": true,
+      "count": 8
+    }
+  ]
+}

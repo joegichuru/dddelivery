@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="300dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/order_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/bold"
+        android:text="#559"
+        android:textColor="@color/black"
+        android:textSize="30sp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="at "
+        android:fontFamily="@font/regular"
+        android:id="@+id/at"
+        android:layout_below="@id/order_id"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/created_at"
+        android:text="18:12pm"
+        android:fontFamily="@font/bold"
+        android:layout_below="@id/order_id"
+        android:layout_toEndOf="@id/at"
+        android:layout_height="wrap_content"/>
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:layout_width="200dp"
+        android:id="@+id/progress_horizontal"
+        android:progress="100"
+        app:indicatorDirectionLinear="endToStart"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/order_id"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="Auto Reject in"
+        android:id="@+id/expired"
+        android:layout_toStartOf="@id/time_left"
+        android:layout_height="wrap_content"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/time_left"
+        android:text="2 mins"
+        android:textColor="@color/black"
+        android:layout_alignParentEnd="true"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:text="Accept"
+        android:id="@+id/accept_btn"
+        android:textColor="@color/white"
+        android:layout_below="@id/progress_horizontal"
+        android:layout_alignParentEnd="true"
+        android:layout_height="wrap_content"/>
+</RelativeLayout>

@@ -12,7 +12,7 @@ import java.io.FileInputStream
 import java.io.InputStream
 import java.util.concurrent.TimeUnit
 
-const val BASE_URL = "https://api.dialdelivery.com/"
+const val BASE_URL = "https://www.google.com/"
 const val CACHE_SIZE = 100 * 1024L
 
 object ApiClient {
@@ -26,13 +26,14 @@ object ApiClient {
         val okHttpClient = OkHttpClient.Builder()
             .connectTimeout(10, TimeUnit.SECONDS)
             .cache(cache)
+            .addInterceptor(MockInterceptor(context))
             .build()
         return Retrofit.Builder().client(okHttpClient)
             .baseUrl(BASE_URL)
             .addConverterFactory(
                 GsonConverterFactory.create()
             )
-             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .build()
     }
 
@@ -53,7 +54,7 @@ object ApiClient {
     /**
      * Factory to allow us to get input stream from a file
      */
-     class FileResourceFactory(val context:Context) : BodyFactory {
+    class FileResourceFactory(val context: Context) : BodyFactory {
         override fun create(input: String): InputStream {
             return context.assets.open(input)
         }

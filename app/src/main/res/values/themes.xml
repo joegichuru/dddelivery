@@ -16,4 +16,13 @@
     <style name="MenuItem">
         <item name="fontFamily">@font/regular</item>
     </style>
+    <style name="toolbarTitle">
+        <item name="android:fontFamily">@font/bold</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+    <style name="tabText">
+        <item name="textAllCaps">false</item>
+        <item name="fontFamily">@font/regular</item>
+    </style>
 </resources>
