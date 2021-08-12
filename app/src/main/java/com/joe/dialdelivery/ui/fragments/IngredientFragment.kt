@@ -39,6 +39,9 @@ class IngredientFragment : Fragment() {
         binding = FragmentIngredientBinding.inflate(inflater, container, false)
         adapter = IngredientAdapter(ingredients, requireContext())
         binding.ingredientList.adapter = adapter
+        binding.errorView.setOnClickListener {
+            findIngredient()
+        }
         return binding.root
     }
 
@@ -49,15 +52,28 @@ class IngredientFragment : Fragment() {
     }
 
     private fun findIngredient() {
+
         disposable = ApiClient.provideApiClient(requireContext()).getIngredients(id!!)
             .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe {
+                if(binding.errorView.visibility!=View.GONE){
+                    binding.errorView.visibility=View.VISIBLE
+                }
+
+                if( binding.progressBar.visibility!=View.VISIBLE){
+                    binding.progressBar.visibility = View.VISIBLE
+                }
+            }
             .subscribeOn(Schedulers.io())
             .subscribe({
                 ingredients.addAll(it.data)
             }, {
                 it.printStackTrace()
+                binding.progressBar.visibility = View.GONE
+                binding.errorView.visibility=View.VISIBLE
             }, {
                 adapter.notifyDataSetChanged()
+                binding.progressBar.visibility = View.GONE
             })
     }
 

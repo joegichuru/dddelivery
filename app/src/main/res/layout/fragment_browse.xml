@@ -31,6 +31,8 @@
                 android:background="@android:color/transparent"
                 android:layout_centerVertical="true"
                 android:hint="Search for item"
+                android:inputType="text"
+                android:focusableInTouchMode="true"
                 android:textColor="@color/black"
                 android:textColorHint="#AFAFAF"
                 android:layout_toEndOf="@id/search_icon"
@@ -41,6 +43,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
+        android:id="@+id/content_view"
         android:layout_below="@id/app_bar"
         android:layout_height="match_parent">
         <com.google.android.material.tabs.TabLayout
@@ -57,5 +60,11 @@
             android:layout_height="0dp"
             android:layout_weight="1"/>
     </LinearLayout>
-
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/ingredient_search_list"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="2" />
 </RelativeLayout>

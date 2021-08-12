@@ -12,7 +12,8 @@ class MockInterceptor(val context: Context) : Interceptor {
         val url = chain.request().url()
 
         val responseString = when {
-            url.toString().endsWith("orders") -> getMenus()
+            url.toString().contains("orders") -> getMenus()
+            url.toString().contains("ingredients")&&  url.toString().contains("search")-> searchIngredients(url.queryParameter("search"))
             url.toString().contains("ingredients") -> getIngredients(url.queryParameter("category"))
             else -> ""
         }
@@ -39,9 +40,6 @@ class MockInterceptor(val context: Context) : Interceptor {
     }
 
     private fun getIngredients(category: String?): String {
-        category?.let {
-            Log.i("category", it)
-        }
         val string = assetStreamer("ingredients.json")
         //filter out the data that belongs only to categoryId
         val jsonObject = JSONObject(string)
@@ -50,6 +48,21 @@ class MockInterceptor(val context: Context) : Interceptor {
         for (i in 0 until data.length()) {
             val item = data.getJSONObject(i)
             if (item.getString("categoryId").equals(category)) {
+                filtered.put(item)
+            }
+        }
+        jsonObject.put("data",filtered)
+        return jsonObject.toString()
+    }
+    private fun searchIngredients(search: String?): String {
+        val string = assetStreamer("ingredients.json")
+        //filter out the data that belongs only to categoryId
+        val jsonObject = JSONObject(string)
+        val data = jsonObject.getJSONArray("data")
+        val filtered = JSONArray()
+        for (i in 0 until data.length()) {
+            val item = data.getJSONObject(i)
+            if (item.getString("title").contains(search!!)) {
                 filtered.put(item)
             }
         }
