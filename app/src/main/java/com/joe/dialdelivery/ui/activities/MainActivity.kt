@@ -13,10 +13,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.joe.dialdelivery.R
 import com.joe.dialdelivery.databinding.ActivityMainBinding
 import com.joe.network.ApiClient
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     lateinit var navController: NavController
@@ -24,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        navController =findNavController(R.id.nav_host)
+        navController = findNavController(R.id.nav_host)
         setUpNavigation()
     }
 

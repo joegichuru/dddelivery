@@ -10,16 +10,18 @@ data class Order(
     val alertedAt: Date = Date(),
     val expiredAt: Date = Date(),
     var progress: Double = 0.0,
-    val recipe: List<Recipe> = emptyList()
+    val addOns: List<AddOn> = emptyList()
 )
 
 data class Recipe(
     val id: Int,
     val title: String,
-    val categoryId:Int,
-    val categoryName:String,
-    val imageUrl:String,
+    val categoryId: Int,
+    val categoryName: String,
+    val imageUrl: String,
     val quantity: String,
     val available: Boolean,
     val count: Int
 )
+
+data class AddOn(val id: Int, val title: String, val quantity: Int)

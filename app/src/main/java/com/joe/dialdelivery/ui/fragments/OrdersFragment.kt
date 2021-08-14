@@ -1,16 +1,22 @@
 package com.joe.dialdelivery.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.joe.dialdelivery.R
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+import com.joe.dialdelivery.databinding.FragmentOrdersBinding
+import com.joe.dialdelivery.ui.adapters.AcceptedOrdersAdapter
+import com.joe.dialdelivery.ui.viewmodels.AcceptedOrderViewModel
+import com.joe.network.model.Order
 
 /**
  * A simple [Fragment] subclass.
@@ -18,16 +24,12 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class OrdersFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
+    lateinit var binding: FragmentOrdersBinding
+    val acceptedOrderViewModel: AcceptedOrderViewModel by activityViewModels()
+    lateinit var ordersAdapter: AcceptedOrdersAdapter
+    val orders: MutableList<Order> = mutableListOf()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
@@ -35,26 +37,19 @@ class OrdersFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_orders, container, false)
+
+        binding = FragmentOrdersBinding.inflate(inflater, container, false)
+        ordersAdapter = AcceptedOrdersAdapter(requireContext(), orders)
+        binding.ordersList.adapter = ordersAdapter
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment OrdersFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            OrdersFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        acceptedOrderViewModel.acceptedOrders.observe(viewLifecycleOwner, {
+            orders.addAll(it)
+            ordersAdapter.notifyDataSetChanged()
+        })
+
     }
 }

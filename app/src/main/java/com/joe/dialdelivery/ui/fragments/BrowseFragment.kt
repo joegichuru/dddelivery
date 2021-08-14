@@ -14,6 +14,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.joe.dialdelivery.R
 import com.joe.dialdelivery.databinding.FragmentBrowseBinding
+import com.joe.dialdelivery.ui.adapters.IngredientAdapter
 import com.joe.dialdelivery.ui.adapters.IngredientPagerAdapter
 import com.joe.network.ApiClient
 import com.joe.network.model.Recipe
@@ -24,7 +25,8 @@ class BrowseFragment : Fragment() {
     lateinit var binding: FragmentBrowseBinding
     private val titles: MutableList<String> = mutableListOf()
     private val fragments: MutableList<Fragment> = mutableListOf()
-    val searchResult: MutableList<Recipe> = mutableListOf()
+    private val searchResult: MutableList<Recipe> = mutableListOf()
+    private lateinit var adapter: IngredientAdapter
     private lateinit var ingredientPagerAdapter: IngredientPagerAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,15 +37,8 @@ class BrowseFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentBrowseBinding.inflate(inflater, container, false)
-
-//        binding.searchInput.onFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
-//            if (hasFocus) {
-//                binding.contentView.visibility = View.GONE
-//            } else {
-//                binding.contentView.visibility = View.VISIBLE
-//            }
-//        }
-
+        adapter = IngredientAdapter(searchResult, requireContext())
+        binding.ingredientSearchList.adapter = adapter
         binding.searchInput.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
@@ -79,7 +74,7 @@ class BrowseFragment : Fragment() {
             }, {
                 it.printStackTrace()
             }, {
-                Log.i("search", "done")
+                adapter.notifyDataSetChanged()
             })
     }
 

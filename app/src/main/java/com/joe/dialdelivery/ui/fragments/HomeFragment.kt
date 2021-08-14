@@ -1,27 +1,36 @@
 package com.joe.dialdelivery.ui.fragments
 
+import android.media.MediaPlayer
+import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
-import com.joe.dialdelivery.R
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.joe.dialdelivery.databinding.FragmentHomeBinding
-import com.joe.dialdelivery.ui.adapters.DisposableCallback
 import com.joe.dialdelivery.ui.adapters.OrderAdapter
+import com.joe.dialdelivery.ui.adapters.OrderCallback
+import com.joe.dialdelivery.ui.viewmodels.AcceptedOrderViewModel
+import com.joe.dialdelivery.ui.viewmodels.OrderViewModel
+import com.joe.network.Api
 import com.joe.network.ApiClient
 import com.joe.network.model.Order
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.math.abs
-import kotlin.math.log
-import kotlin.math.round
+import javax.inject.Inject
 import kotlin.math.roundToInt
 
 
@@ -29,16 +38,23 @@ import kotlin.math.roundToInt
  * A simple [Fragment] subclass.
  * create an instance of this fragment.
  */
-class HomeFragment : Fragment(), DisposableCallback {
+
+class HomeFragment : Fragment(), OrderCallback {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var orderAdapter: OrderAdapter
 
     private val compositeDisposable = CompositeDisposable()
-    val orders = mutableListOf<Order>()
+    val acceptedOrderViewModel: AcceptedOrderViewModel by activityViewModels()
+    val ordersViewModel: OrderViewModel by activityViewModels()
 
+    //track all running disposables
+    private val disposables: MutableList<Disposable> = mutableListOf()
+    val orders = mutableListOf<Order>()
+    private lateinit var mediaPlayer: MediaPlayer
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //Log.i("date",Date().to)
+        val alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+        mediaPlayer = MediaPlayer.create(requireContext(), alarmUri)
     }
 
     override fun onCreateView(
@@ -47,6 +63,30 @@ class HomeFragment : Fragment(), DisposableCallback {
     ): View {
         //bind layout
         binding = FragmentHomeBinding.inflate(inflater, container, false)
+        binding.errorView.setOnClickListener {
+            findOrders()
+        }
+        ordersViewModel.orders.observe(viewLifecycleOwner, {
+            orders.clear()
+            orders.addAll(it)
+            binding.progressBar.visibility = View.GONE
+            orderAdapter.notifyDataSetChanged()
+        })
+        ordersViewModel.error.observe(viewLifecycleOwner, {
+            if (it) {
+                binding.errorView.visibility = View.VISIBLE
+            } else {
+                binding.errorView.visibility = View.GONE
+            }
+        })
+        ordersViewModel.loading.observe(viewLifecycleOwner, {
+            if (it) {
+                binding.progressBar.visibility = View.VISIBLE
+            } else {
+                binding.progressBar.visibility = View.GONE
+            }
+        })
+
         return binding.root
     }
 
@@ -54,25 +94,15 @@ class HomeFragment : Fragment(), DisposableCallback {
         super.onViewCreated(view, savedInstanceState)
         initAdapter()
     }
-    private fun initAdapter(){
+
+    private fun initAdapter() {
         //setup adapter
         orderAdapter = OrderAdapter(orders, requireContext(), this)
         binding.ordersList.adapter = orderAdapter
     }
-    private fun findOrders(){
-        ApiClient.provideApiClient(requireContext()).getOrders()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe({
 
-                       orders.addAll(it.data)
-            },{
-              it.printStackTrace()
-            },{
-                //
-                Log.i("done","done")
-                orderAdapter.notifyDataSetChanged()
-            })
+    private fun findOrders() {
+        ordersViewModel.fetchOrders()
     }
 
     override fun publish(position: Int) {
@@ -86,7 +116,22 @@ class HomeFragment : Fragment(), DisposableCallback {
                     updateItem(position, it)
                 }
         compositeDisposable.add(disposable)
+        disposables.add(disposable)
     }
+
+    override fun onReject(position: Int) {
+        ordersViewModel.removeOrder(orders[position])
+        compositeDisposable.remove(disposables[position])
+        orderAdapter.notifyItemRemoved(position)
+    }
+
+    override fun onAccept(position: Int) {
+        acceptedOrderViewModel.addOrder(orders[position])
+        ordersViewModel.removeOrder(orders[position])
+        compositeDisposable.remove(disposables[position])
+        orderAdapter.notifyItemRemoved(position)
+    }
+
 
     private fun updateItem(position: Int, lo: Long) {
         val vh =
@@ -99,41 +144,21 @@ class HomeFragment : Fragment(), DisposableCallback {
             val order = orders[position]
             // Log.i("order",order.toString())
             val progress = progress(order.expiredAt, order.createdAt)
-            Log.i("progress","$progress")
-            it.progress.progress=progress
+            it.progress.progress = progress
+            it.timeLeft.text = timeLeft(order.expiredAt)
             if (progress <= 0) {
-                it.acceptBtn.text="Expired"
+                //hide accept btn
+                //show expireb btn
+                it.acceptBtn.visibility = View.GONE
+                it.expiredBtn.visibility = View.VISIBLE
+            } else {
+                alertUser(order.alertedAt)
+                it.acceptBtn.visibility = View.VISIBLE
+                it.expiredBtn.visibility = View.GONE
             }
-            it.timeLeft.text = " some #$lo"
         }
-
-        //  orderAdapter.notifyItemChanged(position,order)
-
     }
 
-    private fun progress(expiresAt: Date, createdAt: Date): Int {
-        val now = Calendar.getInstance().time
-        if (now > expiresAt) {
-            Log.i("exp","expired")
-            //expired
-            return 0;
-        }
-        val duration = ((expiresAt.time - createdAt.time) ).toDouble()
-        val remaining = ((expiresAt.time - now.time) ).toDouble()
-        Log.i("dur","$duration")
-        Log.i("rem","$remaining")
-        return ((remaining / duration) * 100).roundToInt()
-    }
-
-    //create dummy orders
-    private fun createOrders(): MutableList<Order> {
-        val now = Calendar.getInstance()
-        val expiresAt = Calendar.getInstance()
-        expiresAt.add(Calendar.MINUTE, 1)
-        return mutableListOf(
-            Order(1, createdAt = now.time, expiredAt = expiresAt.time),
-        )
-    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -146,7 +171,47 @@ class HomeFragment : Fragment(), DisposableCallback {
     }
 
     override fun onResume() {
+        Log.i("resume", "resume")
         super.onResume()
-        findOrders()
+
     }
+
+    fun playTone() {
+        mediaPlayer.start()
+    }
+
+    fun alertUser(alertTime: Date) {
+        val now = Date()
+        if (alertTime.time > now.time) {
+            playTone()
+        }
+    }
+}
+
+fun progress(expiresAt: Date, createdAt: Date): Int {
+    val now = Calendar.getInstance().time
+    if (now > expiresAt) {
+        //expired
+        return 0;
+    }
+    val duration = ((expiresAt.time - createdAt.time)).toDouble()
+    val remaining = ((expiresAt.time - now.time)).toDouble()
+    return ((remaining / duration) * 100).roundToInt()
+}
+
+fun timeLeft(expiresAt: Date): String {
+    val now = Calendar.getInstance().time
+    if (now > expiresAt) {
+        //expired
+        return "0 sec";
+    }
+    val remaining = ((expiresAt.time - now.time))
+    val minutes = remaining / 60000
+    val seconds = (remaining % 60000) / 1000
+    return "$minutes min $seconds sec."
+}
+
+fun formatDate(date: Date): String {
+    val dateFormat = SimpleDateFormat("hh:mm a")
+    return dateFormat.format(date)
 }

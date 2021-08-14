@@ -6,9 +6,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import com.joe.dialdelivery.R
 import com.joe.dialdelivery.databinding.FragmentIngredientBinding
 import com.joe.dialdelivery.ui.adapters.IngredientAdapter
+import com.joe.dialdelivery.ui.viewmodels.IngredientViewModel
 import com.joe.network.ApiClient
 import com.joe.network.model.Recipe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -20,15 +22,16 @@ const val ID = "id"
 
 class IngredientFragment : Fragment() {
     private lateinit var binding: FragmentIngredientBinding
-    private lateinit var disposable: Disposable
     private lateinit var adapter: IngredientAdapter
     private val ingredients: MutableList<Recipe> = mutableListOf()
+    private val ingredientViewModel: IngredientViewModel by activityViewModels()
     private var id: Int? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             id = it.getInt(ID)
         }
+        findIngredient()
     }
 
     override fun onCreateView(
@@ -42,44 +45,47 @@ class IngredientFragment : Fragment() {
         binding.errorView.setOnClickListener {
             findIngredient()
         }
+        ingredientViewModel.ingredients.observe(viewLifecycleOwner, {
+            ingredients.clear()
+            ingredients.addAll(it)
+            adapter.notifyDataSetChanged()
+        })
+        ingredientViewModel.error.observe(viewLifecycleOwner, {
+            if (it) {
+                if (binding.errorView.visibility != View.VISIBLE) {
+                    binding.errorView.visibility = View.VISIBLE
+                }
+
+            } else {
+                if (binding.errorView.visibility != View.GONE) {
+                    binding.errorView.visibility = View.GONE
+                }
+            }
+        })
+
+        ingredientViewModel.loading.observe(viewLifecycleOwner, {
+            if (it) {
+                if (binding.progressBar.visibility != View.VISIBLE) {
+                    binding.progressBar.visibility = View.VISIBLE
+                }
+            } else {
+                binding.progressBar.visibility = View.GONE
+            }
+        })
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        findIngredient()
     }
 
     private fun findIngredient() {
-
-        disposable = ApiClient.provideApiClient(requireContext()).getIngredients(id!!)
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe {
-                if(binding.errorView.visibility!=View.GONE){
-                    binding.errorView.visibility=View.VISIBLE
-                }
-
-                if( binding.progressBar.visibility!=View.VISIBLE){
-                    binding.progressBar.visibility = View.VISIBLE
-                }
-            }
-            .subscribeOn(Schedulers.io())
-            .subscribe({
-                ingredients.addAll(it.data)
-            }, {
-                it.printStackTrace()
-                binding.progressBar.visibility = View.GONE
-                binding.errorView.visibility=View.VISIBLE
-            }, {
-                adapter.notifyDataSetChanged()
-                binding.progressBar.visibility = View.GONE
-            })
+        ingredientViewModel.fetchIngredients(id!!)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        disposable.dispose()
     }
 
     companion object {

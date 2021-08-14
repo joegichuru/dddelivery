@@ -8,6 +8,7 @@
         android:id="@+id/home"
         android:name="com.joe.dialdelivery.ui.fragments.HomeFragment"
         android:label="@string/home"
+
         tools:layout="@layout/fragment_home" />
 
     <fragment

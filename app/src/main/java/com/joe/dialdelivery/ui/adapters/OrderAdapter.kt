@@ -11,20 +11,35 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.joe.dialdelivery.R
+import com.joe.dialdelivery.ui.fragments.formatDate
+import com.joe.dialdelivery.ui.fragments.progress
+import com.joe.dialdelivery.ui.fragments.timeLeft
 import com.joe.network.model.Order
 
 class OrderAdapter(
     private val orders: MutableList<Order>,
     private val context: Context,
-    private val disposableCallback: DisposableCallback
+    private val orderCallback: OrderCallback
 ) :
     RecyclerView.Adapter<OrderAdapter.OrderViewHolder>() {
 
     inner class OrderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val timeLeft: TextView = itemView.findViewById(R.id.time_left)
         val orderId: TextView = itemView.findViewById(R.id.order_id)
-        val progress:LinearProgressIndicator=itemView.findViewById(R.id.progress_horizontal)
-        val acceptBtn:Button=itemView.findViewById(R.id.accept_btn)
+        val progress: LinearProgressIndicator = itemView.findViewById(R.id.progress_horizontal)
+        val acceptBtn: TextView = itemView.findViewById(R.id.accept_btn)
+        val expiredBtn: TextView = itemView.findViewById(R.id.expired_btn)
+        val createdAt: TextView = itemView.findViewById(R.id.created_at)
+
+        init {
+            expiredBtn.setOnClickListener {
+                orderCallback.onReject(adapterPosition)
+            }
+            acceptBtn.setOnClickListener {
+                orderCallback.onAccept(adapterPosition)
+            }
+        }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrderViewHolder {
@@ -35,10 +50,21 @@ class OrderAdapter(
     override fun onBindViewHolder(holder: OrderViewHolder, position: Int) {
         val order = orders[position]
         holder.orderId.text = "#${order.id}"
-        holder.timeLeft.text ="#${order.progress}"
-        //  holder.
+        val progress = progress(order.expiredAt, order.createdAt)
+        holder.progress.progress = progress
+        holder.timeLeft.text = timeLeft(order.expiredAt)
+        holder.createdAt.text = formatDate(order.createdAt)
+        if (progress <= 0) {
+            //hide accept btn
+            //show expired btn
+            holder.acceptBtn.visibility = View.GONE
+            holder.expiredBtn.visibility = View.VISIBLE
+        } else {
+            holder.acceptBtn.visibility = View.VISIBLE
+            holder.expiredBtn.visibility = View.GONE
+        }
         //should register an observer timer
-        disposableCallback.publish(position)
+        orderCallback.publish(position)
     }
 
     override fun getItemCount(): Int {
@@ -47,6 +73,8 @@ class OrderAdapter(
 
 }
 
-interface DisposableCallback {
+interface OrderCallback {
     fun publish(position: Int)
+    fun onReject(position: Int)
+    fun onAccept(position: Int)
 }

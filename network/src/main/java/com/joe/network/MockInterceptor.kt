@@ -62,7 +62,7 @@ class MockInterceptor(val context: Context) : Interceptor {
         val filtered = JSONArray()
         for (i in 0 until data.length()) {
             val item = data.getJSONObject(i)
-            if (item.getString("title").contains(search!!)) {
+            if (item.getString("title").contains(search!!,true)) {
                 filtered.put(item)
             }
         }

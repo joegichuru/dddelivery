@@ -3,6 +3,12 @@ package com.joe.network
 import android.content.Context
 import co.infinum.retromock.BodyFactory
 import co.infinum.retromock.Retromock
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ActivityContext
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -11,12 +17,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.io.FileInputStream
 import java.io.InputStream
 import java.util.concurrent.TimeUnit
+import javax.inject.Singleton
 
 const val BASE_URL = "https://www.google.com/"
 const val CACHE_SIZE = 100 * 1024L
 
 object ApiClient {
-    fun provideApiClient(context: Context): Api {
+    fun provideApiClient( context: Context): Api {
         return buildRetrofit(context)
             .create(Api::class.java)
     }

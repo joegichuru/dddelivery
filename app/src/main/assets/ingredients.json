@@ -16,7 +16,7 @@
     },
     {
       "id": 2,
-      "title": "Japanese Fried Rice",
+      "title": "Bentea Fried Rice",
       "categoryId": 2,
       "imageUrl": "",
       "quantity": 10,
@@ -34,7 +34,7 @@
     },
     {
       "id": 2,
-      "title": "Japanese Fried Rice",
+      "title": "Qucik Fried Rice",
       "categoryId": 4,
       "imageUrl": "",
       "quantity": 10,
@@ -43,7 +43,7 @@
     },
     {
       "id": 2,
-      "title": "Japanese Fried Rice",
+      "title": "Bentos Fried Rice",
       "categoryId": 4,
       "imageUrl": "",
       "quantity": 10,
@@ -52,7 +52,7 @@
     },
     {
       "id": 2,
-      "title": "Japanese Fried Rice",
+      "title": "Bento Fried Rice",
       "categoryId": 4,
       "imageUrl": "",
       "quantity": 10,
