@@ -8,7 +8,9 @@ import com.joe.network.model.Order
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
+import java.util.*
 import javax.inject.Inject
+import kotlin.random.Random
 
 @HiltViewModel
 class OrderViewModel @Inject constructor(private val api: Api) : ViewModel() {
@@ -21,12 +23,10 @@ class OrderViewModel @Inject constructor(private val api: Api) : ViewModel() {
     }
 
     fun removeOrder(order: Order) {
-
         orders.value = orders.value?.filter { it != order }
     }
 
     fun fetchOrders() {
-
         api.getOrders()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
@@ -34,17 +34,27 @@ class OrderViewModel @Inject constructor(private val api: Api) : ViewModel() {
                 error.postValue(false)
                 loading.postValue(true)
             }
-            .subscribe({
-                orders.postValue(it.data)
+            .subscribe({ it ->
+                //stream data to change create and expiry times to
+                // be atleast around this time to simulate a realistic order
+                orders.postValue(it.data.map {order->
+                    val time = (2..4).random()
+                    val now = Calendar.getInstance()
+                    val expireAt = Calendar.getInstance()
+                    val alertAt = Calendar.getInstance()
+                    expireAt.add(Calendar.MINUTE, time)
+                    alertAt.add(Calendar.MINUTE, time / 2)
+                    order.alertedAt = alertAt.time
+                    order.expiredAt = expireAt.time
+                    order.createdAt = now.time
+                    order
+                })
             }, {
-                it.printStackTrace()
                 error.postValue(true)
                 loading.postValue(false)
             }, {
-                //
-                Log.i("done", "done")
                 loading.postValue(false)
-                // orderAdapter.notifyDataSetChanged()
+
             })
     }
 }

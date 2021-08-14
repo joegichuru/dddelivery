@@ -10,11 +10,17 @@
       "createdAt": "2021-08-14T10:20:55.544Z",
       "expiredAt": "2021-08-14T10:22:55.544Z",
       "alertedAt": "2021-08-14T10:21:55.544Z",
+      "title": "Fried Chicken",
       "addOns": [
         {
           "id": 1,
-          "quantity": 5,
+          "quantity": 2,
           "title": "Eggs"
+        },
+        {
+          "id": 2,
+          "quantity": 1,
+          "title": "Salad"
         }
       ]
     },
@@ -22,27 +28,45 @@
       "id": 2,
       "createdAt": "2021-08-14T09:24:55.544Z",
       "expiredAt": "2021-08-14T09:24:55.544Z",
-      "alertedAt": "2021-08-14T10:12:55.544Z",
+      "alertedAt": "2021-08-14T17:00:55.544Z",
+      "title": "Egg Fried Rice",
       "addOns": [
         {
           "id": 1,
-          "quantity": 5,
+          "quantity": 2,
           "title": "Eggs"
+        },
+        {
+          "id": 1,
+          "quantity": 1,
+          "title": "Hot Source"
         }
       ]
     },
     {
       "id": 3,
       "createdAt": "2021-08-14T17:00:55.544Z",
-      "expiredAt": "2021-08-14T17:00:55.544Z",
-      "alertedAt": "2021-08-14T10:12:55.544Z",
+      "expiredAt": "2021-08-14T17:05:55.544Z",
+      "alertedAt": "2021-08-14T16:59:55.544Z",
+      "title": "Noodles",
       "addOns": [
         {
           "id": 1,
-          "quantity": 5,
+          "quantity": 3,
           "title": "Eggs"
+        },
+        {
+          "id": 2,
+          "quantity": 2,
+          "title": "Garlic"
+        },
+        {
+          "id": 3,
+          "quantity": 1,
+          "title": "Salad"
         }
       ]
     }
+
   ]
 }

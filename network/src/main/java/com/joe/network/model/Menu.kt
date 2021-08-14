@@ -6,10 +6,9 @@ data class Order(
     val id: Int,
     val title: String = "Test",
     val quantity: Int = 1,
-    val createdAt: Date = Date(),
-    val alertedAt: Date = Date(),
-    val expiredAt: Date = Date(),
-    var progress: Double = 0.0,
+    var createdAt: Date = Date(),
+    var alertedAt: Date = Date(),
+    var expiredAt: Date = Date(),
     val addOns: List<AddOn> = emptyList()
 )
 

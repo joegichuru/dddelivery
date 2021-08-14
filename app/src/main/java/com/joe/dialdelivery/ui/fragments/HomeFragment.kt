@@ -31,6 +31,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.math.log
 import kotlin.math.roundToInt
 
 
@@ -144,6 +145,7 @@ class HomeFragment : Fragment(), OrderCallback {
             val order = orders[position]
             // Log.i("order",order.toString())
             val progress = progress(order.expiredAt, order.createdAt)
+            Log.i("progress","$progress")
             it.progress.progress = progress
             it.timeLeft.text = timeLeft(order.expiredAt)
             if (progress <= 0) {
@@ -176,13 +178,13 @@ class HomeFragment : Fragment(), OrderCallback {
 
     }
 
-    fun playTone() {
+    private fun playTone() {
         mediaPlayer.start()
     }
 
-    fun alertUser(alertTime: Date) {
-        val now = Date()
-        if (alertTime.time > now.time) {
+    private fun alertUser(alertTime: Date) {
+        val now =Calendar.getInstance()
+        if (now.timeInMillis>alertTime.time) {
             playTone()
         }
     }
@@ -203,12 +205,12 @@ fun timeLeft(expiresAt: Date): String {
     val now = Calendar.getInstance().time
     if (now > expiresAt) {
         //expired
-        return "0 sec";
+        return "Order expired.";
     }
     val remaining = ((expiresAt.time - now.time))
     val minutes = remaining / 60000
     val seconds = (remaining % 60000) / 1000
-    return "$minutes min $seconds sec."
+    return "Expires in $minutes min $seconds sec."
 }
 
 fun formatDate(date: Date): String {

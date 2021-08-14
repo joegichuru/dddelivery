@@ -12,8 +12,8 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
 @HiltViewModel
-class IngredientViewModel @Inject constructor(private val api: Api):ViewModel() {
-    val ingredients: MutableLiveData<List<Recipe>> = MutableLiveData()
+class IngredientViewModel @Inject constructor(private val api: Api) : ViewModel() {
+    val ingredients: MutableLiveData<Map<Int, List<Recipe>>> = MutableLiveData()
     val error: MutableLiveData<Boolean> = MutableLiveData(false)
     val loading: MutableLiveData<Boolean> = MutableLiveData(false)
     fun fetchIngredients(categoryId: Int) {
@@ -25,9 +25,9 @@ class IngredientViewModel @Inject constructor(private val api: Api):ViewModel() 
             }
             .subscribeOn(Schedulers.io())
             .subscribe({
-                ingredients.postValue(it.data)
+                val pair = Pair(categoryId, it.data)
+                ingredients.postValue(mapOf(pair))
             }, {
-                it.printStackTrace()
                 error.postValue(true)
                 loading.postValue(false)
             }, {
