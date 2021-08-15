@@ -9,19 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.joe.dialdelivery.R
 import com.joe.network.model.AddOn
 
-class AddOnAdapter(val context: Context, val addons: List<AddOn>) :
+/**
+ * Adapter for addons in a single order
+ */
+class AddOnAdapter(val context: Context, private val addons: List<AddOn>) :
     RecyclerView.Adapter<AddOnAdapter.AddOnViewHolder>() {
-
-    inner class AddOnViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val id: TextView = itemView.findViewById(R.id.id)
-        val title: TextView = itemView.findViewById(R.id.title)
-        val quantity: TextView = itemView.findViewById(R.id.quantity)
-        fun bindAddOn(addOn: AddOn) {
-            id.text = "#${addOn.id}"
-            title.text = addOn.title
-            quantity.text = "x${addOn.quantity}"
-        }
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddOnViewHolder {
         return AddOnViewHolder(
@@ -36,5 +28,16 @@ class AddOnAdapter(val context: Context, val addons: List<AddOn>) :
 
     override fun getItemCount(): Int {
         return addons.size
+    }
+
+    inner class AddOnViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val id: TextView = itemView.findViewById(R.id.id)
+        val title: TextView = itemView.findViewById(R.id.title)
+        val quantity: TextView = itemView.findViewById(R.id.quantity)
+        fun bindAddOn(addOn: AddOn) {
+            id.text = "#${addOn.id}"
+            title.text = addOn.title
+            quantity.text = "x${addOn.quantity}"
+        }
     }
 }

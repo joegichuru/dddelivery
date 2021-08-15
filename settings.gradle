@@ -9,4 +9,3 @@ dependencyResolutionManagement {
 rootProject.name = "dialdelivery"
 include ':app'
 include ':network'
-include ':ddmerchant'

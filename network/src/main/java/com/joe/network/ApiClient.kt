@@ -1,23 +1,12 @@
 package com.joe.network
 
 import android.content.Context
-import co.infinum.retromock.BodyFactory
-import co.infinum.retromock.Retromock
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ActivityContext
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import java.io.FileInputStream
-import java.io.InputStream
 import java.util.concurrent.TimeUnit
-import javax.inject.Singleton
 
 const val BASE_URL = "https://www.google.com/"
 const val CACHE_SIZE = 100 * 1024L
@@ -42,29 +31,5 @@ object ApiClient {
             )
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .build()
-    }
-
-    /**
-     * provide mock api client
-     */
-    fun mockApiClient(context: Context): Api {
-        return Retromock.Builder()
-            .apply {
-                retrofit(buildRetrofit(context))
-                defaultBehavior {
-                    500
-                }
-                defaultBodyFactory(FileResourceFactory(context))
-            }.build().create(Api::class.java)
-    }
-
-    /**
-     * Factory to allow us to get input stream from a file
-     */
-    class FileResourceFactory(val context: Context) : BodyFactory {
-        override fun create(input: String): InputStream {
-            return context.assets.open(input)
-        }
-
     }
 }

@@ -1,13 +1,10 @@
 package com.joe.network
 
-import co.infinum.retromock.meta.Mock
-import co.infinum.retromock.meta.MockResponse
 import com.joe.network.model.Order
 import com.joe.network.model.Recipe
 import com.joe.network.model.ResponseData
 import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface Api {

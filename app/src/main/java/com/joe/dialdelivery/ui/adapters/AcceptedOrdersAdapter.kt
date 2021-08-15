@@ -11,6 +11,9 @@ import com.joe.dialdelivery.R
 import com.joe.dialdelivery.ui.fragments.formatDate
 import com.joe.network.model.Order
 
+/**
+ * Adapter for all accepted orders
+ */
 class AcceptedOrdersAdapter(val context: Context, val orders: MutableList<Order>) :
     RecyclerView.Adapter<AcceptedOrdersAdapter.AcceptedOrderViewHolder>() {
 

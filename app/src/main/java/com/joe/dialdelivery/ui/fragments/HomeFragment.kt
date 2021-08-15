@@ -110,7 +110,7 @@ class HomeFragment : Fragment(), OrderCallback {
         //use position to register a disposable
         //check if order expired before registering
         val disposable =
-            Observable.interval(1, TimeUnit.SECONDS).delay(0, TimeUnit.SECONDS)
+            Observable.interval(1, TimeUnit.MINUTES).delay(0, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe {
@@ -145,7 +145,6 @@ class HomeFragment : Fragment(), OrderCallback {
             val order = orders[position]
             // Log.i("order",order.toString())
             val progress = progress(order.expiredAt, order.createdAt)
-            Log.i("progress","$progress")
             it.progress.progress = progress
             it.timeLeft.text = timeLeft(order.expiredAt)
             if (progress <= 0) {

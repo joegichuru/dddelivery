@@ -28,9 +28,6 @@ class BrowseFragment : Fragment() {
     private val searchResult: MutableList<Recipe> = mutableListOf()
     private lateinit var adapter: IngredientAdapter
     private lateinit var ingredientPagerAdapter: IngredientPagerAdapter
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -93,13 +90,13 @@ class BrowseFragment : Fragment() {
 
     private fun findIngredients() {
         fragments.add(IngredientFragment.newInstance(1))
-        titles.add("Mains")
+        titles.add("Breakfast")
         fragments.add(IngredientFragment.newInstance(2))
-        titles.add("Appetizer")
+        titles.add("Lunch")
         fragments.add(IngredientFragment.newInstance(3))
-        titles.add("Quick Byte")
-        fragments.add(IngredientFragment.newInstance(4))
-        titles.add("Bento")
+        titles.add("Dinner")
+        fragments.add(IngredientFragment.newInstance(3))
+        titles.add("Snack")
         setUpTabs()
     }
 

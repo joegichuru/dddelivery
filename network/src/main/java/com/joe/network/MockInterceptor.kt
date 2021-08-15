@@ -1,25 +1,29 @@
 package com.joe.network
 
 import android.content.Context
-import android.util.Log
-import com.google.gson.Gson
 import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONObject
 
+/**
+ * Mock api server through okhttp interceptor
+ * will intercept all requests and modify the response to simulate an api
+ */
 class MockInterceptor(val context: Context) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val url = chain.request().url()
 
         val responseString = when {
             url.toString().contains("orders") -> getMenus()
-            url.toString().contains("ingredients")&&  url.toString().contains("search")-> searchIngredients(url.queryParameter("search"))
+            url.toString().contains("ingredients") && url.toString()
+                .contains("search") -> searchIngredients(url.queryParameter("search"))
             url.toString().contains("ingredients") -> getIngredients(url.queryParameter("category"))
             else -> ""
         }
+        //get response
         val response = chain.proceed(chain.request())
-        //build a mocked response and discard the previous
-        val mockResponse = response.newBuilder()
+        //re rewrite a mocked response and discard the previous response
+        return response.newBuilder()
             .code(200)
             .protocol(Protocol.HTTP_2)
             .message(responseString)
@@ -31,7 +35,6 @@ class MockInterceptor(val context: Context) : Interceptor {
             )
             .addHeader("content-type", "application/json")
             .build()
-        return mockResponse
 
     }
 
@@ -71,7 +74,7 @@ class MockInterceptor(val context: Context) : Interceptor {
     }
 
     /**
-     * Helper function to read data from json files stores in assets
+     * Helper function to read data from json files stored in assets
      */
     private fun assetStreamer(fileName: String): String {
         val stream = context.assets.open(fileName)

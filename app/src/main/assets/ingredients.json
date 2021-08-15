@@ -7,81 +7,81 @@
   "data": [
     {
       "id": 1,
-      "title": "Japanese Fried Rice",
+      "title": "Kaya Toast",
       "categoryId": 1,
-      "imageUrl": "",
+      "imageUrl": "https://www.autostraddle.com/wp-content/uploads/2014/08/kayatoast.jpg?resize=640%2C480",
       "quantity": 10,
       "available": false,
       "count": 15
     },
     {
       "id": 2,
-      "title": "Bentea Fried Rice",
-      "categoryId": 2,
-      "imageUrl": "",
-      "quantity": 10,
+      "title": "Appam",
+      "categoryId": 1,
+      "imageUrl": "https://www.autostraddle.com/wp-content/uploads/2014/08/appam.jpg?resize=427%2C640",
+      "quantity": 4,
       "available": false,
       "count": 25
     },
     {
       "id": 2,
-      "title": "Japanese Fried Rice",
+      "title": "Chai Tow Kway ",
+      "categoryId": 1,
+      "imageUrl": "https://www.autostraddle.com/wp-content/uploads/2014/08/chaitowkway.jpg?resize=427%2C640",
+      "quantity": 10,
+      "available": true,
+      "count": 2
+    },
+    {
+      "id": 2,
+      "title": "Hokkien prawn mee",
+      "categoryId": 2,
+      "imageUrl": "https://a.cdn-hotels.com/gdcs/production166/d1226/3e2c15b9-0822-4f54-bfb6-8d1ba6c9bc68.jpg",
+      "quantity": 10,
+      "available": false,
+      "count": 2
+    },
+    {
+      "id": 2,
+      "title": "Barbecued stingray",
+      "categoryId": 2,
+      "imageUrl": "https://a.cdn-hotels.com/gdcs/production198/d1068/3a762d07-05f1-425c-9149-b2b5878d3f51.jpg",
+      "quantity": 10,
+      "available": true,
+      "count": 8
+    },
+    {
+      "id": 2,
+      "title": "Satay",
+      "categoryId": 2,
+      "imageUrl": "https://a.cdn-hotels.com/gdcs/production45/d1944/3438d4e4-4945-437e-80a9-a3d609ddd8b7.jpg",
+      "quantity": 10,
+      "available": true,
+      "count": 8
+    },
+    {
+      "id": 2,
+      "title": "Fish head curry",
+      "categoryId": 2,
+      "imageUrl": "https://a.cdn-hotels.com/gdcs/production39/d532/b56f73e1-5ac3-4d80-966a-d773ac80b0b9.jpg",
+      "quantity": 10,
+      "available": true,
+      "count": 8
+    },
+    {
+      "id": 2,
+      "title": "Nasi lemak",
       "categoryId": 3,
-      "imageUrl": "",
-      "quantity": 10,
-      "available": true,
-      "count": 2
-    },
-    {
-      "id": 2,
-      "title": "Qucik Fried Rice",
-      "categoryId": 4,
-      "imageUrl": "",
-      "quantity": 10,
-      "available": true,
-      "count": 2
-    },
-    {
-      "id": 2,
-      "title": "Bentos Fried Rice",
-      "categoryId": 4,
-      "imageUrl": "",
+      "imageUrl": "https://a.cdn-hotels.com/gdcs/production7/d767/54127290-ccbe-461e-be5e-317e1363c1cf.jpg",
       "quantity": 10,
       "available": true,
       "count": 8
     },
     {
       "id": 2,
-      "title": "Bento Fried Rice",
-      "categoryId": 4,
-      "imageUrl": "",
-      "quantity": 10,
-      "available": true,
-      "count": 8
-    },
-    {
-      "id": 2,
-      "title": "Bento Fried Rice",
-      "categoryId": 4,
-      "imageUrl": "",
-      "quantity": 10,
-      "available": true,
-      "count": 8
-    },
-    {
-      "id": 2,
-      "title": "Bento Fried Rice",
-      "categoryId": 4,
-      "imageUrl": "",
-      "quantity": 10,
-      "available": true,
-      "count": 8
-    },
-    {
-      "id": 2,
-      "title": "Bento Fried Rice",
-      "categoryId": 4,
-      "imageUrl": "",
+      "title": "Oyster omelette",
+      "categoryId": 3,
+      "imageUrl": "https://a.cdn-hotels.com/gdcs/production19/d360/b5bcb3f2-df68-4bff-84c9-96cf7e3760bc.jpg",
       "quantity": 10,
       "available": true,
       "count": 8
