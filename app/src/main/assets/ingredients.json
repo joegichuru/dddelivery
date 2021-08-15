@@ -85,6 +85,14 @@
       "quantity": 10,
       "available": true,
       "count": 8
+    },{
+      "id": 2,
+      "title": "Golden Duck",
+      "categoryId": 4,
+      "imageUrl": "https://media.timeout.com/images/105595406/380/285/image.jpg",
+      "quantity": 10,
+      "available": true,
+      "count": 8
     }
   ]
 }

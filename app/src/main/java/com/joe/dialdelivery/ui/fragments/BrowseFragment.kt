@@ -95,8 +95,8 @@ class BrowseFragment : Fragment() {
         titles.add("Lunch")
         fragments.add(IngredientFragment.newInstance(3))
         titles.add("Dinner")
-        fragments.add(IngredientFragment.newInstance(3))
-        titles.add("Snack")
+        fragments.add(IngredientFragment.newInstance(4))
+        titles.add("Snacks")
         setUpTabs()
     }
 
